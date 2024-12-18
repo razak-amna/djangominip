@@ -1,0 +1,108 @@
+{% extends 'home.html' %}
+
+{% block content %}
+<div class="container my-5" style="padding-top: 80px;">
+    <!-- Merged Title and Card -->
+    <div class="card shadow-sm">
+        <div class="card-header text-center">
+            <h1 class="job-title mb-0">Apply for {{ job.title }}</h1>
+        </div>
+        <div class="card-body">
+            <p><strong>Company:</strong> 
+                {% if job.recruiter %}
+                    {{ job.recruiter.company_name }}
+                {% else %}
+                    Admin
+                {% endif %}
+            </p>
+            <p><strong>Location:</strong> {{ job.location }}</p>
+            <p><strong>Description:</strong> {{ job.description }}</p>
+
+            <form method="POST" class="mt-4">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="cover_letter" class="form-label">Cover Letter:</label>
+                    <textarea id="cover_letter" name="cover_letter" class="form-control" rows="5" placeholder="Write your cover letter here..."></textarea>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success">Submit Application</button>
+                    <a href="{% url 'jobs' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Fix footer position */
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    main {
+        flex: 1;
+    }
+
+    footer {
+        position: fixed; /* footer at bottom */
+        bottom: 0;
+        width: 100%;
+        background-color: rgb(0,0,0,0.1);
+        padding: 10px 0;
+        text-align: center;
+        border-top: 1px solid #ddd;
+    }
+
+    /* Card styling */
+    .card {
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        background-color: #f8f9fa;
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #646465;
+    }
+
+    .card-header h1 {
+        font-weight: bold;
+        font-size: 2rem;
+        color: black;  /* Black color applied here */
+    }
+
+    /* Form styling */
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .form-control {
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    /* Button styling */
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+</style>
+{% endblock %}

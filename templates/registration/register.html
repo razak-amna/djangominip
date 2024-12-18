@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-section {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Register</h1>
+        <p>Select your role to continue with registration:</p>
+
+        <select id="userRole" onchange="toggleFormSections()">
+            <option value="">-- Select Your Role --</option>
+            <option value="jobseeker">Jobseeker</option>
+            <option value="recruiter">Recruiter</option>
+        </select>
+
+        <form action="{% url 'register' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- General Fields -->
+            <div>
+                <label for="username">Username:</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                <p style="color: red;">{{ form.username.errors }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                <p style="color: red;">{{ form.email.errors }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                <p style="color: red;">{{ form.password.errors }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <label for="confirm_password">Confirm Password:</label>
+                {{ form.confirm_password }}
+                {% if form.confirm_password.errors %}
+                <p style="color: red;">{{ form.confirm_password.errors }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Role Selection -->
+            <div>
+                <label>Select Role:</label>
+                <input type="radio" name="user_type" value="jobseeker" id="jobseeker" required>
+                <label for="jobseeker">JobSeeker</label>
+                <input type="radio" name="user_type" value="recruiter" id="recruiter" required>
+                <label for="recruiter">Recruiter</label>
+            </div>
+
+            <!-- Jobseeker Form -->
+            <div id="jobseekerForm" class="form-section">
+                <h2>Jobseeker Details</h2>
+                {{ jobseeker_form.as_p }}
+            </div>
+
+            <!-- Recruiter Form -->
+            <div id="recruiterForm" class="form-section">
+                <h2>Recruiter Details</h2>
+                {{ recruiter_form.as_p }}
+            </div>
+
+            <button type="button" onclick="this.form.submit();">Register</button>
+        </form>
+    </div>
+
+    <script>
+        function toggleFormSections() {
+            const userRole = document.getElementById('userRole').value;
+            const jobseekerForm = document.getElementById('jobseekerForm');
+            const recruiterForm = document.getElementById('recruiterForm');
+
+            jobseekerForm.classList.remove('active');
+            recruiterForm.classList.remove('active');
+
+            if (userRole === 'jobseeker') {
+                jobseekerForm.classList.add('active');
+            } else if (userRole === 'recruiter') {
+                recruiterForm.classList.add('active');
+            }
+        }
+    </script>
+
+    <!-- Display any errors -->
+    {% if error %}
+    <p style="color: red;">{{ error }}</p>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,50 @@
+{% extends 'home.html' %}
+
+
+    {% block content %}
+    <div class="container">
+        {% if user.is_authenticated %}
+            <div class="profile-header">
+                <h1>Welcome to Your Profile</h1>
+            </div>
+            {% if profile %}
+                {% if profile.user_type == 'jobseeker' %}
+                    <!-- Job Seeker Profile -->
+                    <div class="profile-card">
+                        <h2>Job Seeker Profile</h2>
+                        <p><strong>Name:</strong> {{ profile.user.username }}</p>
+                        <p><strong>Email:</strong> {{ profile.user.email }}</p>
+                        <p><strong>Phone:</strong> {{ profile.phone }}</p>
+                        <p><strong>Resume:</strong> 
+                            {% if profile.resume %}
+                                <a href="{{ profile.resume.url }}" target="_blank" class="btn btn-primary">Download Resume</a>
+                            {% else %}
+                                No Resume Uploaded
+                            {% endif %}
+                        </p>
+                        <p><strong>Skills:</strong> {{ profile.skills }}</p>
+                        <a href="{% url 'modify-jobseeker-profile' %}" class="btn btn-primary">Edit Profile</a>
+                    </div>
+                {% elif profile.user_type == 'recruiter' %}
+                    <!-- Recruiter Profile -->
+                    <div class="profile-card">
+                        <h2>Recruiter Profile</h2>
+                        <p><strong>Company:</strong> {{ profile.company_name }}</p>
+                        <p><strong>Email:</strong> {{ profile.user.email }}</p>
+                        <a href="{% url 'modify-recruiter-profile' %}" class="btn btn-primary">Edit Profile</a>
+                    </div>
+                {% else %}
+                    <p>User role not recognized.</p>
+                {% endif %}
+            {% else %}
+                <p>No profile data available.</p>
+            {% endif %}
+        {% else %}
+            <h2>Please Log In</h2>
+            <p>You need to log in to view your profile.</p>
+            <a href="{% url 'login' %}" class="btn btn-primary">Log In</a>
+        {% endif %}
+    </div>
+    {% endblock %}
+
+    

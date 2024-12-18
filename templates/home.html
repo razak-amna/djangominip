@@ -1,0 +1,198 @@
+{% load group_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Recruitment Portal</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Full-page background */
+        html , body {
+            margin: 0;
+            padding: 0;
+            background: url("{% static 'images/bgi-poratl.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            color: white;
+            font-family:Georgia, 'Times New Roman', Times, serif;
+            text-align:center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Transparent Navbar */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.5); /* Transparent black background */
+            position: fixed; /* Stick to the top */
+            width: 100%; /* Full width */
+            z-index: 10; /* Ensure it stays above other content */
+            top: 0;
+            left: 0;
+        }
+
+        .navbar a {
+            color: white !important; /* White text for navbar links */
+            font-weight: bold;
+        }
+
+        .main-wrapper {
+            flex: 1; /* Allow this to grow and push the footer to the bottom */
+            display: flex;
+            flex-direction: column; /* Stack the main content and sections vertically */
+            align-items: center; /* Center the content horizontally */
+        }
+
+        /* Centered content */
+        .main-content {
+            text-align: center;
+            margin-top: 15%;
+            transform: translate(-50%, -50%) Center; /*content horizontally and vertically */
+        }
+
+        .main-content h1 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .main-content p {
+            font-size: 1.2rem;
+        }
+
+        /* Adjust text styles */
+        .main-content h1,
+        .main-content p {
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Add subtle shadow for readability */
+        }
+
+        /* Navbar hover effect */
+        .navbar a:hover {
+            color: #0b0b0b !important; /* Highlighted color */
+        }
+
+        /* Section styling */
+        .section {
+            margin-top: 30px; /* Space between sections */
+            margin-bottom: 150px;
+        }
+
+        .section h2 {
+            font-size: 2rem;
+        }
+
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: rgba(0, 0, 0, 0.5); /* transparent background */
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            flex-shrink: 0; /* Ensure the footer doesn't shrink */
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 1rem;
+            color: #ccc; /* Light gray text */
+        }
+
+        /* Responsive footer behavior */
+        @media (max-width: 768px) {
+            footer {
+                font-size: 0.9rem; /* Slightly smaller text on smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Transparent Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="{% static 'images/portal-logo.jpg' %}" alt="Logo" width="40" height="40" class="d-inline-block align-text-middle">
+                Online Recruitment Portal
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'jobs' %}">Jobs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    
+    <!-- Main Content -->
+    {% block content %}
+    <div class="main-wrapper">
+        <div class="main-content">
+        <h1>Welcome to the Online Recruitment Portal</h1>
+        <p>Your gateway to finding the best job opportunities or hiring top talent.</p>
+        </div>
+    </div>
+
+    {% if profile.user_type == "JobSeeker" %}
+    <div class="section">
+        <h2>Job Seekers</h2>
+        <p>Welcome, JobSeeker! Access your profile here: <a href="{% url 'modify-jobseeker-profile' %}">My Profile</a></p>
+        <p>Looking for your next career opportunity? Explore a wide variety of job postings and apply with ease.</p>
+        <a href="{% url 'jobs' %}" class="btn-custom">Explore Jobs</a>
+    </div>
+    {% elif profile.user_type == "Recruiters" %}
+    <div class="section">
+        <h2>Recruiters</h2>
+        <p>Welcome, Recruiter! Access your profile here: <a href="{% url 'modify-recruiter-profile' %}">My Profile</a></p>
+        <p>Looking to find the perfect candidate for your job openings? Post jobs and review applicants.</p>
+        <a href="{% url 'post-job' %}" class="btn-custom">Post a Job</a>
+    </div>
+    {% else %}
+    <div class="section">
+        <h2>Welcome!</h2>
+        <p>Welcome, User! Access your dashboard here: <a href="{% url 'user_dashboard' %}">Dashboard</a></p>
+        <p>Join our platform to connect job seekers and recruiters seamlessly.</p>
+        <a href="{% url 'register' %}" class="btn-custom">Register Now</a>
+    </div>
+    {% endif %}
+
+
+    {% endblock %}
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Job Portal. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+{% extends 'home.html' %}
+
+{% block content %}
+    <div class="container">
+        <h2>Modify Recruiter Profile</h2>
+
+        <!-- Display any messages -->
+        {% if messages %}
+            <div class="alert alert-success">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Profile form -->
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="company_name">Company Name</label>
+                <input type="text" name="company_name" id="company_name" class="form-control" value="{{ form.company_name.value }}">
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea name="address" id="address" class="form-control">{{ form.address.value }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="contact_number">Contact Number</label>
+                <input type="text" name="contact_number" id="contact_number" class="form-control" value="{{ form.contact_number.value }}">
+            </div>
+
+            <div class="form-group">
+                <label for="website">Website</label>
+                <input type="text" name="website" id="website" class="form-control" value="{{ form.website.value }}">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Company Description</label>
+                <textarea name="description" id="description" class="form-control">{{ form.description.value }}</textarea>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+    </div>
+{% endblock %}

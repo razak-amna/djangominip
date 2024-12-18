@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Resume for {{ jobseeker.user.username }}</h2>
+
+  {% if jobseeker.resume %}
+    <p><strong>Resume:</strong> <a href="{{ jobseeker.resume.url }}" target="_blank">Download Resume</a></p>
+  {% else %}
+    <p>No resume uploaded.</p>
+  {% endif %}
+
+  <!-- You can add more details about the JobSeeker here -->
+  <p><strong>Phone:</strong> {{ jobseeker.phone }}</p>
+  <p><strong>Qualifications:</strong> {{ jobseeker.qualifications }}</p>
+  <p><strong>Skills:</strong> {{ jobseeker.skills }}</p>
+{% endblock %}

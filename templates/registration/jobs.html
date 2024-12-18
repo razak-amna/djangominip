@@ -1,0 +1,126 @@
+{% extends 'home.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-4 page-heading">Available Jobs</h1>
+    {% if jobs %}
+        <ul class="job-list">
+            {% for job in jobs %}
+                <li class="job-item card shadow-sm mb-4 p-3">
+                    <h2 class="job-title">{{ job.title }}</h2>
+                    <p><strong>Company:</strong> 
+                        {% if job.recruiter %}
+                            {{ job.recruiter.company_name }}
+                        {% else %}
+                            Admin
+                        {% endif %}
+                    </p>
+                    <p><strong>Location:</strong> {{ job.location }}</p>
+                    <p><strong>Skills Required:</strong> {{ job.skills_needed }}</p>
+                    <p><strong>Description:</strong> {{ job.description }}</p>
+                    <p><strong>Salary:</strong> {{ job.salary }}</p>
+                    <a href="{% url 'apply-job' job.id %}" class="btn btn-primary">Apply</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-info">
+            <p>No jobs are currently available. Please check back later.</p>
+        </div>
+    {% endif %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<style>
+    /* Fixed Navbar */
+    nav.navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Page Content Padding */
+    .container {
+        margin-top: 100px; /* Adjust to ensure space for the fixed navbar */
+    }
+
+    /* Page Heading */
+    .page-heading {
+        font-weight: bold;
+        color: #333;
+        font-size: 2rem;
+    }
+
+    /* Job List Styles */
+    .job-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .job-item {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .job-item:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transform: translateY(-5px);
+    }
+
+    .job-title {
+        color: #007bff;
+        font-size: 1.5rem;
+    }
+
+    .job-item p {
+        margin: 5px 0;
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .btn-primary {
+        margin-top: 10px;
+    }
+
+    /* Sticky Footer */
+    footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* transparent background */
+        padding: 10px 0;
+        text-align: center;
+        border-top: 1px solid #ddd;
+    }
+
+    /* Body Padding for Footer */
+    body {
+        padding-bottom: 60px; /* Adjust to match footer height */
+    }
+</style>
+
+<script>
+    // Adjust the footer dynamically if needed
+    document.addEventListener("DOMContentLoaded", () => {
+        const footer = document.querySelector("footer");
+        const content = document.querySelector(".container");
+
+        if (content.offsetHeight + footer.offsetHeight < window.innerHeight) {
+            footer.style.position = "fixed";
+        } else {
+            footer.style.position = "static";
+        }
+    });
+</script>
+{% endblock %}
