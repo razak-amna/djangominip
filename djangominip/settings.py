@@ -120,11 +120,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR /'static']
 
-LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = 'login'
+LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/profile/'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # End session when the browser is closed
+SESSION_COOKIE_AGE = 1800  # Set session timeout (e.g., 30 minutes)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

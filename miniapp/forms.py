@@ -68,9 +68,8 @@ class RecruitersForm(forms.ModelForm):
     class Meta:
         model = Recruiters
         fields = [
-            'company_name', 'company_logo', 'contact',
-            'skills_required', 'job_title', 'job_description',
-            'location', 'salary'
+            'company_name', 'company_logo', 'contact', 'skills_required', 'job_title', 
+            'job_description', 'location', 'salary', 'contact_number', 'website', 'description'
         ]
         widgets = {
             'company_name': forms.TextInput(attrs={'placeholder': 'Enter Company Name'}),

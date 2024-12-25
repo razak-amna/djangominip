@@ -1,12 +1,22 @@
 {% extends 'home.html' %}
 
 
-    {% block content %}
+{% block content %}
     <div class="container">
+
+        <p>Debugging Test: User = {{ user }}</p>
+        <p>Authenticated: {{ user.is_authenticated }}</p>
+
         {% if user.is_authenticated %}
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+
             <div class="profile-header">
                 <h1>Welcome to Your Profile</h1>
             </div>
+
             {% if profile %}
                 {% if profile.user_type == 'jobseeker' %}
                     <!-- Job Seeker Profile -->
@@ -25,6 +35,7 @@
                         <p><strong>Skills:</strong> {{ profile.skills }}</p>
                         <a href="{% url 'modify-jobseeker-profile' %}" class="btn btn-primary">Edit Profile</a>
                     </div>
+
                 {% elif profile.user_type == 'recruiter' %}
                     <!-- Recruiter Profile -->
                     <div class="profile-card">
@@ -45,6 +56,6 @@
             <a href="{% url 'login' %}" class="btn btn-primary">Log In</a>
         {% endif %}
     </div>
-    {% endblock %}
+{% endblock %}
 
     

@@ -1,6 +1,46 @@
-{% extends 'home.html' %}
-
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modify Recruiter Profile</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            margin-top: 50px;
+        }
+        .container {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-weight: bold;
+            color: #333;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+        .alert {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
     <div class="container">
         <h2>Modify Recruiter Profile</h2>
 
@@ -21,29 +61,68 @@
                 <label for="company_name">Company Name</label>
                 <input type="text" name="company_name" id="company_name" class="form-control" value="{{ form.company_name.value }}">
             </div>
-
+        
             <div class="form-group">
-                <label for="address">Address</label>
-                <textarea name="address" id="address" class="form-control">{{ form.address.value }}</textarea>
+                <label for="company_logo">Company Logo</label>
+                <input type="file" name="company_logo" id="company_logo" class="form-control">
+                {% if form.instance.company_logo %}
+                <img src="{{ form.instance.company_logo.url }}" alt="Company Logo" width="150">
+                {% endif %}
             </div>
-
+        
+            <div class="form-group">
+                <label for="contact">Contact</label>
+                <textarea name="contact" id="contact" class="form-control">{{ form.contact.value }}</textarea>
+            </div>
+        
+            <div class="form-group">
+                <label for="skills_required">Skills Required</label>
+                <textarea name="skills_required" id="skills_required" class="form-control">{{ form.skills_required.value }}</textarea>
+            </div>
+        
+            <div class="form-group">
+                <label for="job_title">Job Title</label>
+                <input type="text" name="job_title" id="job_title" class="form-control" value="{{ form.job_title.value }}">
+            </div>
+        
+            <div class="form-group">
+                <label for="job_description">Job Description</label>
+                <textarea name="job_description" id="job_description" class="form-control">{{ form.job_description.value }}</textarea>
+            </div>
+        
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" name="location" id="location" class="form-control" value="{{ form.location.value }}">
+            </div>
+        
+            <div class="form-group">
+                <label for="salary">Salary</label>
+                <input type="number" name="salary" id="salary" class="form-control" value="{{ form.salary.value }}">
+            </div>
+        
             <div class="form-group">
                 <label for="contact_number">Contact Number</label>
                 <input type="text" name="contact_number" id="contact_number" class="form-control" value="{{ form.contact_number.value }}">
             </div>
-
+        
             <div class="form-group">
                 <label for="website">Website</label>
-                <input type="text" name="website" id="website" class="form-control" value="{{ form.website.value }}">
+                <input type="url" name="website" id="website" class="form-control" value="{{ form.website.value }}">
             </div>
-
+        
             <div class="form-group">
-                <label for="description">Company Description</label>
+                <label for="description">Description</label>
                 <textarea name="description" id="description" class="form-control">{{ form.description.value }}</textarea>
             </div>
-
-            <!-- Submit button -->
+        
             <button type="submit" class="btn btn-primary">Save Changes</button>
         </form>
+        
     </div>
-{% endblock %}
+
+    <!-- Bootstrap JS (Optional) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

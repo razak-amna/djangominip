@@ -1,0 +1,104 @@
+/* General Page Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 2rem;
+    color: #4CAF50; /* Green color for the header */
+}
+
+/* Section Styling */
+section {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 900px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #4CAF50;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+/* Personal Information */
+section p {
+    font-size: 1rem;
+    margin: 5px 0;
+}
+
+section p strong {
+    color: #555;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Resume Link */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Logout Button Styling */
+form button {
+    background-color: #f44336; /* Red color for logout */
+    font-size: 1rem;
+    border-radius: 4px;
+    padding: 10px 20px;
+    border: none;
+    margin-top: 20px;
+}
+
+form button:hover {
+    background-color: #d32f2f;
+}
+
+/* Applications Section */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    background-color: #f9f9f9;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+ul li strong {
+    color: #333;
+}
+
+/* Empty State for Applications */
+section p {
+    font-style: italic;
+    color: #888;
+}

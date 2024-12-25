@@ -13,6 +13,9 @@ class Recruiters(models.Model):
     job_description = models.TextField(null=True, blank=True)
     location = models.CharField(max_length=100, null=True, blank=True)
     salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    contact_number = models.CharField(max_length=15, null=True)
+    website = models.URLField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.company_name
@@ -62,8 +65,9 @@ class Application(models.Model):
         ('Shortlisted', 'Shortlisted'),
         ('Rejected', 'Rejected'),
     ]
-    job = models.ForeignKey('Job', on_delete=models.CASCADE)
+    job = models.ForeignKey('Job', on_delete=models.CASCADE, related_name='applications')
     jobseeker = models.ForeignKey('JobSeeker', on_delete=models.CASCADE, related_name='applications')
+    # applicant = models.ForeignKey(User, on_delete=models.CASCADE, related_name='applications', null=True, default=None, blank=True)
     cover_letter = models.TextField()
     applied_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')

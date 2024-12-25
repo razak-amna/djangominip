@@ -5,11 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post a Job</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom styling for the form */
+        body {
+            background-color: #f4f7fa;
+            font-family:'Times New Roman', Times, serif;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-weight: bold;
+            text-align:center;
+        }
+
+        .form-label {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #34495e;
+            text-align: center;
+        }
+
+        .mb-3 {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            border-radius: 5px;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            border-color: #3498db;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+
+        .message-container {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9c2c2;
+            border-radius: 5px;
+            color: #e74c3c;
+        }
+
+        .message-container ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .message-container li {
+            margin-bottom: 5px;
+        }
+
+        /* Remove the center alignment from the form */
+        .row {
+            justify-content:center;  /* Align the form to the left */
+        }
+
+        .col-md-8 {
+            max-width: 100%;  /* Remove any restrictions on column width */
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-lg {
+            width: auto;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">Post a New Job</h1>
-        <div class="row justify-content-center">
+        <h1>Post a New Job</h1>
+        <div class="row">
             <div class="col-md-8">
                 <!-- Job Posting Form -->
                 <form method="post" enctype="multipart/form-data">
@@ -38,22 +119,25 @@
                         <label for="requirements" class="form-label">Requirements</label>
                         {{ form.skills_needed }}
                     </div>
-                            {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
 
-        <form method="post" action="">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Post Job</button>
-        </form>
+                    <!-- Display messages if any -->
+                    {% if messages %}
+                        <div class="message-container">
+                            <ul>
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary btn-lg">Post Job</button>
                 </form>
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,13 @@
+<h2>Apply for Job: {{ job.title }}</h2>
+<p>Skills Required: {{ job.skills_needed }}</p>
+<p>Recruiter: {{ job.recruiter.company_name if job.recruiter else "No recruiter" }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <textarea name="cover_letter" placeholder="Write your cover letter here..." required></textarea><br>
+    <label>
+        <input type="checkbox" name="confirm_user" required>
+        Confirm that you are {{ request.user.username }}
+    </label><br>
+    <button type="submit">Apply</button>
+</form>

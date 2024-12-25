@@ -1,19 +1,8 @@
-
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modify JobSeeker Profile</title>
-    <style>
-        /* Resetting some default styles */
+/* Resetting some default styles */
 body, html {
     margin: 0;
     padding: 0;
     font-family:'Times New Roman', Times, serif;
-    font-size: large;
-    font-weight: bolder;
     background-color: #f4f7fa;
 }
 
@@ -54,7 +43,7 @@ form .form-control {
 }
 
 form .form-control:focus {
-    border-color: #032d4a;
+    border-color: #3498db;
     box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
 }
 
@@ -92,21 +81,3 @@ button[type="submit"]:hover {
         padding: 12px;
     }
 }
-
-    </style>
-</head>
-<body>
-<div class="container mt-5">
-    <h1 class="text-center mb-4">Modify JobSeeker Profile</h1>
-    <form method="post" enctype="multipart/form-data" class="shadow p-4 rounded bg-light">
-        {% csrf_token %}
-        <div class="row g-3">
-            {{ form.as_p }}
-        </div>
-        <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
-        </div>
-    </form>
-</div>
-</body>
-</html>

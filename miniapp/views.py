@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import IntegrityError
 from django.contrib.auth.models import Group
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotFound, HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm 
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User, Group
-from .forms import UserRegistrationForm, JobSeekerForm, RecruitersForm, ForgotPasswordForm, ResetPasswordForm, PostJobForm
+from .forms import UserRegistrationForm, JobSeekerForm, RecruitersForm, ForgotPasswordForm, ResetPasswordForm, PostJobForm, JobForm
 from .models import JobSeeker, Recruiters, Job, Application, Profile
 
 def home(request):
@@ -49,6 +49,12 @@ def login_view(request):
             return redirect('login')
 
     return render(request, 'registration/login.html')
+
+
+# def logout_view(request):
+#     logout_view(request)
+#     return redirect('home') 
+
 
 def forgot_password(request):
     if request.method == 'POST':
@@ -92,7 +98,6 @@ def reset_password(request, username):
     return render(request, 'reset_password.html', {'form': form, 'username': username})
 
 
-@login_required
 def register(request):
     if request.method == 'POST':
         print("POST request received")
@@ -194,6 +199,58 @@ def jobs(request):
     return render(request, 'registration/jobs.html', {'jobs': jobs})
 
 
+@login_required
+def view_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    return render(request, 'registration/view_job.html', {'job': job})
+
+@login_required
+def edit_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    
+    if request.method == 'POST':
+        form = JobForm(request.POST, instance=job)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Job updated successfully!")
+            return redirect('recruiter_dashboard')
+    else:
+        form = JobForm(instance=job)
+    
+    return render(request, 'registration/edit_job.html', {'form': form})
+
+
+@login_required
+def delete_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    
+    if request.method == 'POST':
+        job.delete()
+        messages.success(request, "Job deleted successfully!")
+        return redirect('recruiter_dashboard')
+    
+    return render(request, 'registration/delete_job.html', {'job': job})
+
+
+@login_required
+def apply_for_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)  # Ensure job exists
+    if request.method == 'POST':
+        if 'confirm_user' in request.POST:
+            # Process application
+            Application.objects.create(
+                job=job,
+                jobseeker=request.user.jobseeker,  # Assuming jobseeker is related to User
+                cover_letter=request.POST.get('cover_letter'),
+            )
+            messages.success(request, "Application submitted successfully!")
+            return redirect('view_job', job_id=job.id)  # Redirect to job detail page
+        else:
+            messages.error(request, "You must confirm your identity to apply.")
+    
+    return render(request, 'registration/apply_for_job.html', {'job': job})
+
+
 def user_dashboard(request):
     # Check the user's group membership
     if request.user.groups.filter(name="JobSeeker").exists():
@@ -229,7 +286,14 @@ def user_dashboard(request):
 
 @login_required
 def recruiter_dashboard(request):
-    return render(request, 'recruiter_dashboard.html')
+    try:
+        recruiter_profile = Recruiters.objects.get(user=request.user)
+        jobs = recruiter_profile.jobs_posted.all()  # Assuming a related name 'jobs_posted' exists in Job model
+    except Recruiters.DoesNotExist:
+        messages.error(request, "Recruiter profile not found. Please update your profile.")
+        return redirect('modify-recruiter-profile')
+
+    return render(request, 'registration/recruiter_dashboard.html', {'jobs': jobs})
 
 
 def post_job(request):
@@ -249,87 +313,66 @@ def post_job(request):
 @login_required
 def profile(request):
     user = request.user
-    print(f"Rendering profile for: {user.username}")
-
+    print("Is Authenticated:", request.user.is_authenticated)
     try:
-        profile = Profile.objects.get(user=request.user)
-        print(f"Profile found: {profile}")
-        print(f"User Type: {profile.user_type}")
+        profile = Profile.objects.get(user=user)
     except Profile.DoesNotExist:
-        # Redirect to a profile creation form
         messages.error(request, "No profile found. Please complete your profile.")
-        return redirect('modify-jobseeker-profile' if user.groups.filter(name='JobSeeker').exists() else 'modify-recruiter-profile')
-    print(f"User type: {profile.user_type}")
+        # Redirect based on the user's group or provide a fallback
+        if user.groups.filter(name='JobSeeker').exists():
+            return redirect('modify-profile', user_type='jobseeker')
+        elif user.groups.filter(name='Recruiter').exists():
+            return redirect('modify-profile', user_type='recruiter')
+        else:
+            return HttpResponse("User role not recognized.")
 
     if profile.user_type == 'jobseeker':
         try:
-            jobseeker_profile = JobSeeker.objects.prefetch_related('applications__job').get(user=request.user)
-            return render(request, 'registration/profile.html', {'profile': jobseeker_profile})
+            jobseeker_profile = JobSeeker.objects.prefetch_related('applications__job').get(user=user)
+            return render(request, 'registration/jobseeker_profile.html', {'profile': jobseeker_profile})
         except JobSeeker.DoesNotExist:
             messages.error(request, "JobSeeker profile not found. Please update your profile.")
-            return redirect('modify-jobseeker-profile')
+            return redirect('modify-profile', user_type='jobseeker')
 
     elif profile.user_type == 'recruiter':
         try:
-            recruiter_profile = Recruiters.objects.prefetch_related('jobs_posted__applications').get(user=request.user)
-            return render(request, 'registration/profile.html', {'profile': recruiter_profile})
+            recruiter_profile = Recruiters.objects.prefetch_related('jobs_posted__applications').get(user=user)
+            print(f"Recruiter Profile: {recruiter_profile}")
+            return render(request, 'registration/recruiter_profile.html', {'profile': recruiter_profile})
         except Recruiters.DoesNotExist:
             messages.error(request, "Recruiter profile not found. Please update your profile.")
-            return redirect('modify-recruiter-profile')
-        print(request)
-    else:
-        return HttpResponse("User role not recognized.")
+            return redirect('modify-profile', user_type='recruiter')
+
+    return HttpResponse("User role not recognized.")
 
 @login_required
-def modify_jobseeker_profile(request):
-    user = request.user
-    print(f"Rendering modify profile for: {user.username}")
-
-    try:
-        jobseeker_profile = JobSeeker.objects.get(user=request.user)
-    except JobSeeker.DoesNotExist:
-        # Handle the case when the JobSeeker profile does not exist
-        jobseeker_profile = None
-        print("No job seeker profile found")
-
-    if request.method == 'POST':
-        form = JobSeekerForm(request.POST, request.FILES, instance=jobseeker_profile)
-        if form.is_valid():
-            form.save()
-            print("Form saved successfully")
-
-            # Redirect to profile page after save
-            return HttpResponseRedirect('/profile/')  # Direct URL to profile
-
-        else:
-            print(f"Form errors: {form.errors}")
+def modify_profile(request, user_type):
+    if user_type == 'jobseeker':
+        profile_class = JobSeeker
+        form_class = JobSeekerForm
+        template_name = 'registration/modify_jobseeker_profile.html'
+    elif user_type == 'recruiter':
+        profile_class = Recruiters
+        form_class = RecruitersForm
+        template_name = 'registration/modify_recruiter_profile.html'
     else:
-        form = JobSeekerForm(instance=jobseeker_profile)
+        return HttpResponse("Invalid user type.")
 
-    return render(request, 'registration/modify_jobseeker_profile.html', {'form': form})
-
-@login_required
-def modify_recruiter_profile(request):
-    recruiter_profile = get_object_or_404(Recruiters, user=request.user)
-    try:
-        # Access the Recruiter profile
-        recruiter = request.user.recruiter_profile  # Use 'recruiter_profile' if related_name is set
-    except Recruiters.DoesNotExist:
-        # If no recruiter profile exists, create one
-        recruiter = Recruiters(user=request.user)
-        recruiter.save()
+    profile = profile_class.objects.filter(user=request.user).first()
 
     if request.method == 'POST':
-        form = RecruitersForm(request.POST, instance=recruiter_profile)
+        form = form_class(request.POST, request.FILES, instance=profile)
         if form.is_valid():
-            form.save()
+            updated_profile = form.save()
             messages.success(request, "Profile updated successfully!")
-            return redirect('profile')  # Redirect to the correct profile view
+            print(f"Profile updated: {updated_profile}")
+            return redirect('profile')
+        else:
+            messages.error(request, "Please correct the errors below.")
     else:
-        form = RecruitersForm(instance=recruiter)
-    
-    return render(request, 'registration/modify_recruiter_profile.html', {'form': form})
+        form = form_class(instance=profile)
 
+    return render(request, template_name, {'form': form})
 
 
 @login_required

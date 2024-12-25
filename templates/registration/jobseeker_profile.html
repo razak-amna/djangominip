@@ -1,0 +1,165 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        /* General Page Styling */
+body {
+    font-family:'Times New Roman', Times, serif;
+    font-size: larger;
+    font-weight: bolder;
+    background-color: #f4f4f9;
+    background: url("{% static 'images/bg-rec.jpg'%}");
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+h1 {
+    margin-top: 10px;
+    font-size: 2rem;
+    color: #000000; 
+}
+
+/* Section Styling */
+section {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 900px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #000000;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+/* Personal Information */
+section p {
+    font-size: 1rem;
+    margin: 5px 0;
+    font-size: large;
+}
+
+section p strong {
+    color: #000000;
+    font-weight: bolder;
+    font-size: larger;
+}
+
+button {
+    background-color: #2ec0f5;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: large;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #09a1cb;
+}
+
+/* Resume Link */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Logout Button Styling */
+form button {
+    background-color: #f44336; /* Red color for logout */
+    font-size: 1rem;
+    font-size: large;
+    border-radius: 4px;
+    padding: 10px 20px;
+    border: none;
+    margin-top: 20px;
+}
+
+form button:hover {
+    background-color: #d32f2f;
+}
+
+/* Applications Section */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    background-color: #f9f9f9;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+ul li strong {
+    color: #333;
+}
+
+/* Empty State for Applications */
+section p {
+    font-style: italic;
+    color: #888;
+}
+
+    </style>
+</head>
+<body>
+<!-- Personal Details -->
+<section>
+    <h1>Welcome, {{ profile.user.username }}</h1>
+    <h2>Personal Information</h2>
+    <p><strong>Username:</strong> {{ profile.user.username }}</p>
+    <p><strong>Email:</strong> {{ profile.user.email }}</p>
+    <p><strong>Resume:</strong> 
+        {% if profile.resume %}
+            <a href="{{ profile.resume.url }}" target="_blank">Download Resume</a>
+        {% else %}
+            Not Uploaded
+        {% endif %}
+    </p>
+    <p><strong>Skills:</strong> {{ profile.skills }}</p>
+    <button onclick="location.href='{% url 'modify-profile' user_type='jobseeker' %}'">Edit Profile</button> 
+    <div>
+    <form method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Logout</button>
+    </form>
+    </div>
+</section>
+
+<!-- Applications -->
+<section>
+    <h2>Applications</h2>
+    <ul>
+        {% for application in profile.applications.all %}
+        <li>
+            <strong>Job Title:</strong> {{ application.job.title }} <br>
+            <strong>Status:</strong> {{ application.status }} <br>
+            <strong>Applied At:</strong> {{ application.applied_at|date:"d M Y H:i" }}
+        </li>
+        {% empty %}
+        <p>No applications found.</p>
+        {% endfor %}
+    </ul>
+</section>
+</body>
+</html>
